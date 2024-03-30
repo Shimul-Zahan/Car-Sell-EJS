@@ -3,6 +3,7 @@ const app = express();
 const port = 5000;
 const bodyParser = require('body-parser');
 const manageController = require('./controller/manage');
+const connectDB = require('./db_connect/db');
 
 
 app.set('view engine', 'ejs');
@@ -22,10 +23,17 @@ app.get('/registration', (req, res) => {
     res.render('registration');
 });
 
-app.post('/register', manageController.registerUser)
-app.post('/create-car', manageController.createCar)
+app.post('/register', manageController.registerUser);
+app.post('/create-car', manageController.createCar);
+app.post('/update-car', manageController.updateCar);
+app.post('/delete-car', manageController.deleteCar);
 
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
+const final = async () => {
+    await connectDB();
+    app.listen(port, () => {
+        console.log(`Server is running on http://localhost:${port}`);
+    });
+}
+
+final()

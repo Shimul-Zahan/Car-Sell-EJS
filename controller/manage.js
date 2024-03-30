@@ -101,19 +101,19 @@ async function createCar(req, res) {
     res.render('login', { message: "Form submitted successfully" });
 }
 
+// !-------------Here is delete-----------------
+async function deleteCar(req, res) {
+    // res.render('login', { message: "Form submitted successfully" });
+}
 
-
-
-
-
-
-
-
-
-
+async function updateCar(req, res) {
+    // res.render('login', { message: "Form submitted successfully" });
+}
 
 
 module.exports = {
     registerUser,
-    createCar
+    createCar,
+    deleteCar,
+    updateCar
 };
