@@ -1,9 +1,8 @@
-// const { model, Schema } = require('mongoose');
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const carSchema = new Schema({
-    name: {
+    carName: {
         type: String,
         required: true
     },
@@ -20,35 +19,34 @@ const carSchema = new Schema({
         required: true,
     },
     description: {
-        type: Number,
+        type: String,
         required: true,
     },
-    createAt: {
+    createdAt: {
         type: Date,
         required: true,
     },
     availability: {
-        type: Number,
+        type: String,
         required: true,
     },
     color: {
-        type: Number,
+        type: String,
         required: true,
     },
-})
-
+    mileage: {
+        type: String,
+        required: true,
+    },
+    transmission: {
+        type: String,
+        required: true,
+    },
+    fuelType: {
+        type: String,
+        required: true,
+    },
+});
 
 const Car = mongoose.model('Car', carSchema);
-module.exports = User;
-/*
-{
-    "name": "Tesla Model S",
-    "image": "tesla_model_s.jpg",
-    "model": "Model S",
-    "price": 79999,
-    "description": "Electric sedan with advanced features",
-    "createAt": "2024-04-01T12:00:00.000Z",
-    "availability": 10,
-    "color": "Red"
-}
-*/ 
+module.exports = Car;
