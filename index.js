@@ -18,7 +18,9 @@ app.get('/about', (req, res) => {
     res.render('about');
 });
 
-app.get('/details', (req, res) => {
+app.get('/details:id', async (req, res) => {
+    const car = await manageController.getCarById();
+    console.log(car, 'for car');
     res.render('details');
 });
 
@@ -32,12 +34,6 @@ app.get('/post-car', (req, res) => {
 
 app.get('/registration', (req, res) => {
     res.render('registration');
-});
-
-// Route for the dashboard
-app.get('/dashboard', (req, res) => {
-    // Render dashboard with content for all components
-    res.render('dashboard', { content: 'dashboard' });
 });
 
 // Route for the home page
@@ -65,12 +61,14 @@ app.get('/add-car', (req, res) => {
 app.get('/delete-item/:id', manageController.deleteCar);
 app.post('/register', manageController.registerUser);
 app.post('/create-car', manageController.createCar);
-app.post('/update-car', manageController.updateCar);
+// app.post('/update-car', manageController.updateCar);
 app.post('/delete-car', manageController.deleteCar);
 app.post('/create-post', manageController.createCar);
 app.get('/', manageController.getAllCar);
-app.get('/singleCar/:id', manageController.getCarById)
 app.post('/login', manageController.login);
+app.get('/details/:id', manageController.details);
+app.get('/updateCar/:id', manageController.updateSingleCar);
+// app.get('/update-car/:id', manageController.updateCarDetails);
 
 
 const final = async () => {

@@ -80,45 +80,45 @@ async function login(req, res) {
 }
 
 //-------------------------------------update car(Aklima)--------------------
-async function updateCar(req, res) {
-    try {
-        uploadImage(req, res, async function (err) {
-            if (err instanceof multer.MulterError) {
-                return res.status(400).json({ error: "Something went wrong with file upload" });
-            }
-            const carId = req.params.id;
-            let existingCar = await Car.findById(carId);
-            if (!existingCar) {
-                return res.status(404).json({ error: "Car post not found" });
-            }
+// async function updateCar(req, res) {
+//     try {
+//         uploadImage(req, res, async function (err) {
+//             if (err instanceof multer.MulterError) {
+//                 return res.status(400).json({ error: "Something went wrong with file upload" });
+//             }
+//             const carId = req.params.id;
+//             let existingCar = await Car.findById(carId);
+//             if (!existingCar) {
+//                 return res.status(404).json({ error: "Car post not found" });
+//             }
 
-            const { carName, model, price, availability, createdAt, color, mileage, transmission, fuelType, description } = req.body;
+//             const { carName, model, price, availability, createdAt, color, mileage, transmission, fuelType, description } = req.body;
 
-            existingCar.carName = carName;
-            existingCar.model = model;
-            existingCar.price = price;
-            existingCar.availability = availability;
-            existingCar.createdAt = createdAt;
-            existingCar.color = color;
-            existingCar.mileage = mileage;
-            existingCar.transmission = transmission;
-            existingCar.fuelType = fuelType;
-            existingCar.description = description;
+//             existingCar.carName = carName;
+//             existingCar.model = model;
+//             existingCar.price = price;
+//             existingCar.availability = availability;
+//             existingCar.createdAt = createdAt;
+//             existingCar.color = color;
+//             existingCar.mileage = mileage;
+//             existingCar.transmission = transmission;
+//             existingCar.fuelType = fuelType;
+//             existingCar.description = description;
 
-            if (req.file) {
-                existingCar.image = req.file.filename;
-            }
+//             if (req.file) {
+//                 existingCar.image = req.file.filename;
+//             }
 
-        
-            const updatedCar = await existingCar.save();
 
-            res.status(200).json({ message: 'Car sell post updated successfully', updatedCar });
-        });
-    } catch (error) {
-        console.error('Error updating car sell post:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-}
+//             const updatedCar = await existingCar.save();
+
+//             res.status(200).json({ message: 'Car sell post updated successfully', updatedCar });
+//         });
+//     } catch (error) {
+//         console.error('Error updating car sell post:', error);
+//         res.status(500).json({ error: 'Internal server error' });
+//     }
+// }
 
 
 //!---POST route for creating a new car sell post---
@@ -165,21 +165,38 @@ async function getAllCar(req, res) {
 }
 
 //----------------getCarById/:id-------------------------
-
-async function getCarById(req, res) {
+async function getCarById(id) {
     try {
-        const carId = req.params.id;
-
-        const car = await Car.findById(carId);
-
+        // const carId = req.params.id;
+        const car = await Car.findById(id);
         if (!car) {
             return res.status(404).json({ error: "Car sell post not found" });
         }
-
-        res.status(200).json({ car });
+        return car;
     } catch (error) {
         console.error('Error fetching car sell post:', error);
         res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+async function details(req, res) {
+    try {
+        const id = req.params.id;
+        const car = await getCarById(id);
+        res.render('details', { car });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function updateSingleCar(req, res) {
+    try {
+        const id = req.params.id;
+        const car = await getCarById(id);
+        console.log(car);
+        res.render('dashboard', { content: 'update-car', car });
+    } catch (error) {
+        console.log(error);
     }
 }
 
@@ -209,11 +226,12 @@ module.exports = {
     registerUser,
     createCar,
     deleteCar,
-    updateCar,
+    updateSingleCar,
     createCar,
     getAllCar,
     getCarById,
     getAllCarForDashboard,
     login,
     deleteCar,
+    details,
 };
