@@ -2,6 +2,8 @@ const multer = require('multer');
 const fs = require('fs');
 const Car = require('../models/carModel');
 const User = require('../models/userModel');
+let loginUser;
+console.log(loginUser, 'from top');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'uploads/');
@@ -38,100 +40,46 @@ async function registerUser(req, res) {
     }
 }
 
-
 // !--------------Here is login user------------
-// async function login(req, res) {
-//     try {
-//         const { email, password, role, image, verifyEmail, name, from } = req.body;
-//         const useremail = await User.findOne({ email });
-//         if (useremail && from) {
-//             return res.json({ message: 'already in db' });
-//         }
-//         if (from) {
-//             const newUser = await new User({
-//                 email,
-//                 name,
-//                 role,
-//                 image,
-//                 verifyEmail,
-//             }).save();
-//             return res.status(200).json({ message: 'successfully created', newUser });
-//         }
-//         // const { email, password } = req.body;
-//         const user = await User.findOne({ email });
-//         if (!user) {
-//             return res.json({ message: 'email didn"t match' });
-//         }
-//         console.log(user);
-//         if (user) {
-//             const passwordMatch = await bcrypt.compare(password, user.password);
-//             if (!passwordMatch) {
-//                 return res.json({ message: 'password didn"t match' });
-//             }
-//         }
-//         const token = jwt.sign(user.email, 'dngfnjnxjmcxnxcn');
-//         res.cookie('token', token, {
-//             httpOnly: true,
-//             secure: false,
-//             // secure: process.env.NODE_ENV === 'production',
-//             // sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-//         }).json({
-//             email: user.email,
-//             token,
-//             role: user.role,
-//             login: true,
-//             image: user?.image,
-//             verifyEmail: user?.verifyEmail,
-//         })
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
-
-// !--------------Here is create car------------
-async function createCar(req, res) {
+async function login(req, res) {
     try {
-        console.log(req.body);
-        const { name, image, model, price, description, createdAt, availability, color } = req.body;
-        console.log(name, image, model, price, description, createdAt, availability, color);
-        // const useremail = await User.findOne({ email });
-        // if (useremail) {
-        //     return res.status(400).json({ message: 'Eamil alreay uses. Try again with new email' });
-        // }
-        // const hashedPassword = await bcrypt.hash(password, 10);
-        // const newUser = await new User({
-        //     email,
-        //     password: hashedPassword,
-        //     name,
-        //     role: 'user',
-        //     otp,
-        //     image: req.file.filename,
-        //     verifyEmail: true,
-        // }).save();
-        // res.status(200).json({ message: 'successfully created', newUser });
-    } catch (error) {
-        console.log(error?.message);
-    }
-    res.render('login', { message: "Form submitted successfully" });
-}
-
-// !-------------Here is delete(Aklima)-----------------
-async function deleteCar(req, res) {
-    try {
-        const carId = req.body.id || req.params.id;
-
-        const car = await Car.findById(carId);
-        if (!car) {
-            return res.status(404).json({ error: 'Car sell is not found' });
+        const { email, password, role, name, } = req.body;
+        console.log(email, password, role, name);
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.json({ message: 'email didn"t match' });
         }
+        console.log(user);
+        if (user) {
+            // const passwordMatch = await bcrypt.compare(password, user.password);
+            if (user.password !== password) {
+                return res.json({ message: 'password didn"t match' });
+            }
+        }
+        const cars = await getAllCarForDashboard();
+        loginUser = user;
+        res.render('home', { cars, loginUser });
 
-        await Car.findByIdAndDelete(carId);
-        res.status(200).json({ message: 'Car sell post deleted successfully' });
+        // const token = jwt.sign(user.email, 'dngfnjnxjmcxnxcn');
+        // res.cookie('token', token, {
+        //     httpOnly: true,
+        //     secure: false,
+        //     // secure: process.env.NODE_ENV === 'production',
+        //     // sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+        // }).json({
+        //     email: user.email,
+        //     token,
+        //     role: user.role,
+        //     login: true,
+        //     image: user?.image,
+        //     verifyEmail: user?.verifyEmail,
+        // })
     } catch (error) {
-        console.error('Error deleting car sell post:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.log(error);
     }
 }
+
+
 
 //-------------------------------------update car(Aklima)--------------------
 async function updateCar(req, res) {
@@ -200,12 +148,8 @@ async function createCar(req, res) {
                 description
             });
             const result = await newCar.save();
-            /*
-            app.get('/sell-car', (req, res) => {
-    res.render('sellCar');
-});
-            */
             res.status(201).json({ message: 'Car sell post created successfully', result });
+            return result;
         });
     } catch (error) {
         console.error('Error creating car sell post:', error);
@@ -216,7 +160,7 @@ async function createCar(req, res) {
 async function getAllCar(req, res) {
     try {
         const cars = await Car.find();
-        res.render("home", { cars })
+        res.render("home", { cars, loginUser })
     } catch (error) {
         res.json({ message: error.message });
     }
@@ -251,6 +195,17 @@ async function getAllCarForDashboard(req, res) {
     }
 }
 
+async function deleteCar(req, res) {
+    try {
+        const carId = req.params.id;
+        console.log(carId);
+        const car = await Car.deleteOne({ _id: carId });
+        const cars = await getAllCarForDashboard();
+        res.render('dashboard', { content: 'products', cars });
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 module.exports = {
     registerUser,
@@ -261,5 +216,6 @@ module.exports = {
     getAllCar,
     getCarById,
     getAllCarForDashboard,
-
+    login,
+    deleteCar,
 };
