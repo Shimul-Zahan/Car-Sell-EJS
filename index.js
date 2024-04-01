@@ -61,14 +61,13 @@ app.get('/add-car', (req, res) => {
 app.get('/delete-item/:id', manageController.deleteCar);
 app.post('/register', manageController.registerUser);
 app.post('/create-car', manageController.createCar);
-// app.post('/update-car', manageController.updateCar);
+app.post('/update-single-car/:id', manageController.updateCar);
 app.post('/delete-car', manageController.deleteCar);
 app.post('/create-post', manageController.createCar);
 app.get('/', manageController.getAllCar);
 app.post('/login', manageController.login);
 app.get('/details/:id', manageController.details);
 app.get('/updateCar/:id', manageController.updateSingleCar);
-// app.get('/update-car/:id', manageController.updateCarDetails);
 
 
 const final = async () => {
