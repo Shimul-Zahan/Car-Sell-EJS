@@ -79,8 +79,6 @@ async function login(req, res) {
     }
 }
 
-
-
 //-------------------------------------update car(Aklima)--------------------
 async function updateCar(req, res) {
     try {
