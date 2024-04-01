@@ -9,11 +9,26 @@
 </head>
 
 <body>
-    <nav class="bg-gray-800 text-white py-8 flex justify-center items-center">
-        <a href="/" class="text-xl font-bold">Home</a>
-        <a href="/about" class="text-xl font-bold ml-4">About Us</a>
-        <a href="/contact" class="text-xl font-bold ml-4">Contact</a>
+    <nav class="bg-gray-800 text-white py-8 flex justify-between items-center px-10">
+        <div class="flex items-center">
+            <a href="/" class="text-xl font-bold">Home</a>
+            <a href="/about" class="text-xl font-bold ml-4">About Us</a>
+            <a href="/contact" class="text-xl font-bold ml-4">Contact</a>
+        </div>
+        <% if (loginUser) { %>
+            <div class="flex items-center">
+                <a href="/dashboard" class="text-xl font-bold ml-4">Dashboard</a>
+                <div class="ml-4 flex items-center">
+                    <span class="text-xl font-bold mr-2">
+                        <%= loginUser.username %>
+                    </span>
+                    <img src="/uploads/<%=loginUser.imageUrl%>" alt="<%=loginUser.username %>"
+                        class="w-8 h-8 rounded-full">
+                </div>
+            </div>
+            <% } %>
     </nav>
+
 
     <section class="bg-gray-900 text-white">
         <div class="mx-auto max-w-screen-xl px-4 py-32 lg:flex lg:h-screen lg:items-center">

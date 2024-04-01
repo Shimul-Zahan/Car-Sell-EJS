@@ -62,13 +62,14 @@ app.get('/add-car', (req, res) => {
     res.render('dashboard', { content: 'add-car' });
 });
 
-
+app.get('/delete-item/:id', manageController.deleteCar);
 app.post('/register', manageController.registerUser);
 app.post('/create-car', manageController.createCar);
 app.post('/update-car', manageController.updateCar);
 app.post('/delete-car', manageController.deleteCar);
 app.post('/create-post', manageController.createCar);
 app.get('/', manageController.getAllCar);
+app.post('/login', manageController.login);
 
 
 const final = async () => {
