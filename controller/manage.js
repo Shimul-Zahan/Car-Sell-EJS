@@ -40,7 +40,6 @@ async function registerUser(req, res) {
     }
 }
 
-
 // !--------------Here is login user------------
 async function login(req, res) {
     try {
@@ -79,7 +78,6 @@ async function login(req, res) {
         console.log(error);
     }
 }
-
 
 // !-------------Here is delete-----------------
 async function deleteCar(req, res) {
