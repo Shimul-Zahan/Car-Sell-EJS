@@ -69,6 +69,7 @@ app.post('/update-car', manageController.updateCar);
 app.post('/delete-car', manageController.deleteCar);
 app.post('/create-post', manageController.createCar);
 app.get('/', manageController.getAllCar);
+app.get('/singleCar/:id', manageController.getCarById)
 app.post('/login', manageController.login);
 
 
