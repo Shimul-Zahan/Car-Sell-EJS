@@ -171,6 +171,15 @@ async function getAllCar(req, res) {
     }
 }
 
+async function getAllCarForDashboard(req, res) {
+    try {
+        const cars = await Car.find();
+        return cars;
+    } catch (error) {
+        res.json({ message: error.message });
+    }
+}
+
 
 module.exports = {
     registerUser,
@@ -179,4 +188,5 @@ module.exports = {
     updateCar,
     createCar,
     getAllCar,
+    getAllCarForDashboard,
 };

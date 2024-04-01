@@ -53,9 +53,13 @@ app.get('/users', (req, res) => {
 });
 
 // Route for the products page
-app.get('/products', (req, res) => {
-    // Render products component
-    res.render('dashboard', { content: 'products' });
+app.get('/products', async (req, res) => {
+    const cars = await manageController.getAllCarForDashboard();
+    res.render('dashboard', { content: 'products', cars });
+});
+
+app.get('/add-car', (req, res) => {
+    res.render('dashboard', { content: 'add-car' });
 });
 
 

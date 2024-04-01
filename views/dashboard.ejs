@@ -35,15 +35,29 @@
             .sidebar.show+.main-content {
                 margin-left: 200px;
             }
+
+            .navbar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .search-bar {
+                flex-grow: 1;
+                margin-right: auto;
+            }
+
+            .sort-by {
+                margin-left: auto;
+            }
         }
     </style>
 </head>
 
 <body class="bg-gray-200 flex flex-col h-screen">
-
     <!-- Top Navigation Bar -->
-    <nav class="bg-gray-800 py-4">
-        <div class="container mx-auto px-4">
+    <nav class="bg-gray-800 py-4 flex">
+        <div class="container mx-auto px-4 lg:w-64">
             <div class="flex justify-between items-center">
                 <div>
                     <h1 class="text-white text-lg font-semibold">Dashboard</h1>
@@ -51,6 +65,34 @@
                 <div>
                     <!-- Add your top navbar content here -->
                 </div>
+            </div>
+        </div>
+        <div class="container mx-auto flex justify-between items-center px-4 navbar">
+            <!-- Search bar -->
+            <div class="search-bar relative">
+                <input type="text"
+                    class="bg-gray-700 w-[700px] text-white w-full px-3 py-2 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                    placeholder="Search..." />
+                <svg class="search-icon absolute right-0 top-0 h-full w-10 p-2 fill-current text-gray-400"
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                        d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                </svg>
+            </div>
+            <!-- Sort by -->
+            <div class="sort-by space-x-5 px-5">
+                <select
+                    class="bg-gray-700 text-white px-3 py-2 rounded-lg focus:outline-none focus:ring focus:border-blue-300">
+                    <option value="">Sort by Field 1</option>
+                    <option value="field1">Field 1</option>
+                    <!-- Add more options as needed -->
+                </select>
+                <select
+                    class="bg-gray-700 text-white px-3 py-2 rounded-lg focus:outline-none focus:ring focus:border-blue-300">
+                    <option value="">Sort by Field 2</option>
+                    <option value="field2">Field 2</option>
+                    <!-- Add more options as needed -->
+                </select>
             </div>
         </div>
     </nav>
@@ -72,10 +114,10 @@
                         <a href="/home" class="block text-gray-300 hover:text-white">Home</a>
                     </li>
                     <li class="py-2">
-                        <a href="/users" class="block text-gray-300 hover:text-white">Users</a>
+                        <a href="/users" class="block text-gray-300 hover:text-white">All Users</a>
                     </li>
                     <li class="py-2">
-                        <a href="/products" class="block text-gray-300 hover:text-white">Products</a>
+                        <a href="/products" class="block text-gray-300 hover:text-white">All Cars</a>
                     </li>
                     <!-- Add more sidebar routes as needed -->
                 </ul>
@@ -85,6 +127,7 @@
         <!-- px-4 py-6 -->
         <!-- Main Content -->
         <main class="mx-auto  flex-1 main-content">
+
             <!-- Content will be loaded dynamically here -->
             <% if (content==='home' ) { %>
                 <%- include('dasHome') %>
@@ -96,16 +139,18 @@
                         <p>This is the Users component</p>
                         <% } else if (content==='products' ) { %>
                             <div class="p-2">
-                                <h2>Products</h2>
-                                <p>This is the Products component</p>
-                                <%- include('dasAllCars') -%>
+                                <%- include('dasAllCars', { cars: cars }) -%>
                             </div>
                             <!-- You can include dynamic data here if needed -->
-                            <% } else { %>
-                                <!-- Default content for the dashboard -->
-                                <h2>Dashboard</h2>
-                                <p>Dashboard content goes here</p>
-                                <% } %>
+                            <% } else if (content==='add-car' ) { %>
+                                <div class="p-2">
+                                    <%- include('sellCar') -%>
+                                </div>
+                                <% } else { %>
+                                    <!-- Default content for the dashboard -->
+                                    <h2>Dashboard</h2>
+                                    <p>Dashboard content goes here</p>
+                                    <% } %>
         </main>
 
     </div>
