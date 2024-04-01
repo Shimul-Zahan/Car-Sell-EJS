@@ -1,0 +1,132 @@
+<!-- dashboard.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Adjustments for mobile devices */
+        @media (max-width: 640px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -200px;
+                /* Changed to match sidebar width */
+                width: 200px;
+                height: 100vh;
+                overflow-y: auto;
+                background-color: #111827;
+                transition: left 0.3s ease;
+            }
+
+            .sidebar.show {
+                left: 0;
+            }
+
+            .main-content {
+                /* Apply margin-left only when sidebar is shown */
+                margin-left: 0;
+            }
+
+            .sidebar.show+.main-content {
+                margin-left: 200px;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-200 flex flex-col h-screen">
+
+    <!-- Top Navigation Bar -->
+    <nav class="bg-gray-800 py-4">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-white text-lg font-semibold">Dashboard</h1>
+                </div>
+                <div>
+                    <!-- Add your top navbar content here -->
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Wrapper -->
+    <div class="flex flex-1">
+
+        <!-- Sidebar -->
+        <aside class="bg-gray-900 text-white min-h-screen sidebar">
+            <div class="px-4 py-6">
+                <input type="text"
+                    class="bg-gray-800 text-white w-full px-3 py-2 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                    placeholder="Search...">
+            </div>
+            <div class="px-4">
+                <h2 class="text-sm text-gray-400 uppercase font-semibold mb-2">Navigation</h2>
+                <ul>
+                    <li class="py-2">
+                        <a href="/home" class="block text-gray-300 hover:text-white">Home</a>
+                    </li>
+                    <li class="py-2">
+                        <a href="/users" class="block text-gray-300 hover:text-white">Users</a>
+                    </li>
+                    <li class="py-2">
+                        <a href="/products" class="block text-gray-300 hover:text-white">Products</a>
+                    </li>
+                    <!-- Add more sidebar routes as needed -->
+                </ul>
+            </div>
+        </aside>
+
+        <!-- px-4 py-6 -->
+        <!-- Main Content -->
+        <main class="mx-auto  flex-1 main-content">
+            <!-- Content will be loaded dynamically here -->
+            <% if (content==='home' ) { %>
+                <%- include('dasHome') %>
+
+                    <!-- users routes -->
+                    <% } else if (content==='users' ) { %>
+                        <h2>Users</h2>
+                        <!-- Render users component -->
+                        <p>This is the Users component</p>
+                        <% } else if (content==='products' ) { %>
+                            <div class="p-2">
+                                <h2>Products</h2>
+                                <p>This is the Products component</p>
+                                <%- include('dasAllCars') -%>
+                            </div>
+                            <!-- You can include dynamic data here if needed -->
+                            <% } else { %>
+                                <!-- Default content for the dashboard -->
+                                <h2>Dashboard</h2>
+                                <p>Dashboard content goes here</p>
+                                <% } %>
+        </main>
+
+    </div>
+
+    <!-- Toggle Sidebar Button (for small devices) -->
+    <button id="sidebarToggle" class="fixed bottom-4 left-4 bg-gray-800 text-white px-4 py-2 rounded-full">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+        </svg>
+    </button>
+
+    <script>
+        // Script to toggle sidebar on small devices
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.querySelector('.sidebar');
+
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('show');
+        });
+    </script>
+
+</body>
+
+</html>
