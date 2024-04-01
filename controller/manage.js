@@ -115,14 +115,65 @@ async function createCar(req, res) {
     res.render('login', { message: "Form submitted successfully" });
 }
 
-// !-------------Here is delete-----------------
+// !-------------Here is delete(Aklima)-----------------
 async function deleteCar(req, res) {
-    // res.render('login', { message: "Form submitted successfully" });
+    try {
+        const carId = req.body.id || req.params.id;
+
+        const car = await Car.findById(carId);
+        if (!car) {
+            return res.status(404).json({ error: 'Car sell is not found' });
+        }
+
+        await Car.findByIdAndDelete(carId);
+        res.status(200).json({ message: 'Car sell post deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting car sell post:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 }
 
+//-------------------------------------update car(Aklima)--------------------
 async function updateCar(req, res) {
-    // res.render('login', { message: "Form submitted successfully" });
+    try {
+        uploadImage(req, res, async function (err) {
+            if (err instanceof multer.MulterError) {
+                return res.status(400).json({ error: "Something went wrong with file upload" });
+            }
+            const carId = req.params.id;
+            let existingCar = await Car.findById(carId);
+            if (!existingCar) {
+                return res.status(404).json({ error: "Car post not found" });
+            }
+
+            const { carName, model, price, availability, createdAt, color, mileage, transmission, fuelType, description } = req.body;
+
+            existingCar.carName = carName;
+            existingCar.model = model;
+            existingCar.price = price;
+            existingCar.availability = availability;
+            existingCar.createdAt = createdAt;
+            existingCar.color = color;
+            existingCar.mileage = mileage;
+            existingCar.transmission = transmission;
+            existingCar.fuelType = fuelType;
+            existingCar.description = description;
+
+            if (req.file) {
+                existingCar.image = req.file.filename;
+            }
+
+        
+            const updatedCar = await existingCar.save();
+
+            res.status(200).json({ message: 'Car sell post updated successfully', updatedCar });
+        });
+    } catch (error) {
+        console.error('Error updating car sell post:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 }
+
 
 //!---POST route for creating a new car sell post---
 async function createCar(req, res) {
@@ -171,6 +222,26 @@ async function getAllCar(req, res) {
     }
 }
 
+//----------------getCarById/:id-------------------------
+
+async function getCarById(req, res) {
+    try {
+        const carId = req.params.id;
+
+        const car = await Car.findById(carId);
+
+        if (!car) {
+            return res.status(404).json({ error: "Car sell post not found" });
+        }
+
+        res.status(200).json({ car });
+    } catch (error) {
+        console.error('Error fetching car sell post:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+
 async function getAllCarForDashboard(req, res) {
     try {
         const cars = await Car.find();
@@ -188,5 +259,7 @@ module.exports = {
     updateCar,
     createCar,
     getAllCar,
+    getCarById,
     getAllCarForDashboard,
+
 };
