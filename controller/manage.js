@@ -79,46 +79,43 @@ async function login(req, res) {
     }
 }
 
-//-------------------------------------update car(Aklima)--------------------
-// async function updateCar(req, res) {
-//     try {
-//         uploadImage(req, res, async function (err) {
-//             if (err instanceof multer.MulterError) {
-//                 return res.status(400).json({ error: "Something went wrong with file upload" });
-//             }
-//             const carId = req.params.id;
-//             let existingCar = await Car.findById(carId);
-//             if (!existingCar) {
-//                 return res.status(404).json({ error: "Car post not found" });
-//             }
+// -------------------------------------update car(Aklima)--------------------
+async function updateCar(req, res) {
+    try {
+        console.log(req.params.id);
+        uploadImage(req, res, async function (err) {
+            if (err instanceof multer.MulterError) {
+                return res.status(400).json({ error: "Something went wrong with file upload" });
+            }
+            const carId = req.params.id;
+            let existingCar = await Car.findById(carId);
+            if (!existingCar) {
+                return res.status(404).json({ error: "Car post not found" });
+            }
 
-//             const { carName, model, price, availability, createdAt, color, mileage, transmission, fuelType, description } = req.body;
+            const { carName, model, price, availability, createdAt, color, mileage, transmission, fuelType, description } = req.body;
 
-//             existingCar.carName = carName;
-//             existingCar.model = model;
-//             existingCar.price = price;
-//             existingCar.availability = availability;
-//             existingCar.createdAt = createdAt;
-//             existingCar.color = color;
-//             existingCar.mileage = mileage;
-//             existingCar.transmission = transmission;
-//             existingCar.fuelType = fuelType;
-//             existingCar.description = description;
-
-//             if (req.file) {
-//                 existingCar.image = req.file.filename;
-//             }
-
-
-//             const updatedCar = await existingCar.save();
-
-//             res.status(200).json({ message: 'Car sell post updated successfully', updatedCar });
-//         });
-//     } catch (error) {
-//         console.error('Error updating car sell post:', error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// }
+            existingCar.carName = carName;
+            existingCar.model = model;
+            existingCar.price = price;
+            existingCar.availability = availability;
+            existingCar.createdAt = createdAt;
+            existingCar.color = color;
+            existingCar.mileage = mileage;
+            existingCar.transmission = transmission;
+            existingCar.fuelType = fuelType;
+            existingCar.description = description;
+            if (req.file) {
+                existingCar.image = req.file.filename;
+            }
+            const updatedCar = await existingCar.save();
+            res.status(200).json({ message: 'Car sell post updated successfully', updatedCar });
+        });
+    } catch (error) {
+        console.error('Error updating car sell post:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
 
 
 //!---POST route for creating a new car sell post---
@@ -163,6 +160,17 @@ async function getAllCar(req, res) {
         res.json({ message: error.message });
     }
 }
+
+
+async function getAllUsers(req, res) {
+    try {
+        const users = await User.find();
+        res.render('dashboard', { content: 'users', users });
+    } catch (error) {
+        res.json({ message: error.message });
+    }
+}
+
 
 //----------------getCarById/:id-------------------------
 async function getCarById(id) {
@@ -227,6 +235,7 @@ module.exports = {
     createCar,
     deleteCar,
     updateSingleCar,
+    updateCar,
     createCar,
     getAllCar,
     getCarById,
@@ -234,4 +243,5 @@ module.exports = {
     login,
     deleteCar,
     details,
+    getAllUsers
 };

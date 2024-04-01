@@ -43,10 +43,10 @@ app.get('/home', (req, res) => {
 });
 
 // Route for the users page
-app.get('/users', (req, res) => {
-    // Render users component
-    res.render('dashboard', { content: 'users' });
-});
+// app.get('/users', (req, res) => {
+//     // Render users component
+//     res.render('dashboard', { content: 'users' });
+// });
 
 // Route for the products page
 app.get('/products', async (req, res) => {
@@ -61,15 +61,14 @@ app.get('/add-car', (req, res) => {
 app.get('/delete-item/:id', manageController.deleteCar);
 app.post('/register', manageController.registerUser);
 app.post('/create-car', manageController.createCar);
-// app.post('/update-car', manageController.updateCar);
+app.post('/update-single-car/:id', manageController.updateCar);
 app.post('/delete-car', manageController.deleteCar);
 app.post('/create-post', manageController.createCar);
 app.get('/', manageController.getAllCar);
 app.post('/login', manageController.login);
 app.get('/details/:id', manageController.details);
 app.get('/updateCar/:id', manageController.updateSingleCar);
-// app.get('/update-car/:id', manageController.updateCarDetails);
-
+app.get('/users', manageController.getAllUsers);
 
 const final = async () => {
     await connectDB();
