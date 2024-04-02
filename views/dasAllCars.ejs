@@ -28,6 +28,8 @@
                     <th class="whitespace-nowrap px-4 py-2 font-bold text-gray-900">Image</th>
                     <th class="whitespace-nowrap px-4 py-2 font-bold text-gray-900">Name</th>
                     <th class="whitespace-nowrap px-4 py-2 font-bold text-gray-900">Model</th>
+                    <th class="whitespace-nowrap px-4 py-2 font-bold text-gray-900">Price</th>
+                    <th class="whitespace-nowrap px-4 py-2 font-bold text-gray-900">Created At</th>
                     <th class="whitespace-nowrap px-4 py-2 font-bold text-gray-900">Availability</th>
                     <th class="whitespace-nowrap px-4 py-2 font-bold text-gray-900">Color</th>
                     <th class="whitespace-nowrap px-4 py-2 font-bold text-gray-900">Action</th>
@@ -46,20 +48,30 @@
                             <%= car.model %>
                         </td>
                         <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                            <%= car.price %>
+                        </td>
+                        <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                            <%= car.createdAt %>
+                        </td>
+                        <td class="whitespace-nowrap px-4 py-2 text-gray-700">
                             <%= car.availability %>
                         </td>
                         <td class="whitespace-nowrap px-4 py-2 text-gray-700">
                             <%= car.color %>
                         </td>
                         <td class="flex gap-4">
-                            <a href="/updateCar/<%=car.id%>"
-                                class="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700">
-                                Edit
-                            </a>
-                            <a href="/delete-item/<%= car.id %>"
-                                class="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700 delete-button">
-                                Delete
-                            </a>
+                            <% if (user.role==='admin' || user.role==='seller' ) { %>
+                                <a href="/updateCar/<%=car.id%>"
+                                    class="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700">
+                                    Edit
+                                </a>
+                                <% if (user.role==='admin' ) { %>
+                                    <a href="/delete-item/<%= car.id %>"
+                                        class="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700 delete-button">
+                                        Delete
+                                    </a>
+                                    <% } %>
+                                        <% } %>
                         </td>
                     </tr>
                     <% }) %>

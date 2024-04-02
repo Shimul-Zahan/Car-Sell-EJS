@@ -69,31 +69,37 @@
         </div>
         <div class="container mx-auto flex justify-between items-center px-4 navbar">
             <!-- Search bar -->
-            <div class="search-bar relative">
-                <input type="text"
-                    class="bg-gray-700 w-[700px] text-white w-full px-3 py-2 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-                    placeholder="Search..." />
-                <svg class="search-icon absolute right-0 top-0 h-full w-10 p-2 fill-current text-gray-400"
-                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path
-                        d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
-                </svg>
-            </div>
+            <form action="/search" method="GET" class="search-form">
+                <div class="search-bar relative">
+                    <input type="text" name="query"
+                        class="bg-gray-700 w-[700px] text-white w-full px-3 py-2 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                        placeholder="Search..." />
+                    <button type="submit" class="search-button absolute right-0 top-0 h-full w-10 p-2">
+                        <svg class="search-icon fill-current text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24">
+                            <path
+                                d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                        </svg>
+                    </button>
+                </div>
+            </form>
+
+
             <!-- Sort by -->
-            <div class="sort-by space-x-5 px-5">
-                <select
-                    class="bg-gray-700 text-white px-3 py-2 rounded-lg focus:outline-none focus:ring focus:border-blue-300">
-                    <option value="">Sort by Field 1</option>
-                    <option value="field1">Field 1</option>
-                    <!-- Add more options as needed -->
-                </select>
-                <select
-                    class="bg-gray-700 text-white px-3 py-2 rounded-lg focus:outline-none focus:ring focus:border-blue-300">
-                    <option value="">Sort by Field 2</option>
-                    <option value="field2">Field 2</option>
-                    <!-- Add more options as needed -->
-                </select>
-            </div>
+            <form action="/sort" method="GET">
+                <div class="sort-by space-x-5 px-5">
+                    <select name="field" id="sort-select"
+                        class="bg-gray-700 text-white px-3 py-2 rounded-lg focus:outline-none focus:ring focus:border-blue-300">
+                        <option value="">Sort by Field 1</option>
+                        <option value="date">Date</option>
+                        <option value="price">Price</option>
+                        <option value="name">Name</option>
+                    </select>
+                    <button type="submit"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Sort</button>
+                </div>
+            </form>
+
         </div>
     </nav>
 
@@ -110,16 +116,13 @@
             <div class="px-4">
                 <h2 class="text-sm text-gray-400 uppercase font-semibold mb-2">Navigation</h2>
                 <ul>
-                    <li class="py-2">
-                        <a href="/home" class="block text-gray-300 hover:text-white">Home</a>
-                    </li>
-                    <li class="py-2">
-                        <a href="/users" class="block text-gray-300 hover:text-white">All Users</a>
-                    </li>
-                    <li class="py-2">
-                        <a href="/products" class="block text-gray-300 hover:text-white">All Cars</a>
-                    </li>
-                    <!-- Add more sidebar routes as needed -->
+                    <% sidebarRoutes.forEach(route=> { %>
+                        <li class="py-2">
+                            <a href="<%= route.path %>" class="block text-gray-300 hover:text-white">
+                                <%= route.label %>
+                            </a>
+                        </li>
+                        <% }); %>
                 </ul>
             </div>
         </aside>
@@ -138,7 +141,7 @@
                         <div class="p-2">
                             <%- include('users', { users: users }) -%>
                         </div>
-                        
+
                         <% } else if (content==='products' ) { %>
                             <div class="p-2">
                                 <%- include('dasAllCars', { cars: cars }) -%>
@@ -176,6 +179,7 @@
         sidebarToggle.addEventListener('click', () => {
             sidebar.classList.toggle('show');
         });
+
     </script>
 
 </body>

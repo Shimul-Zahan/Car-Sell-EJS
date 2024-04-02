@@ -1,7 +1,14 @@
+const express = require('express');
+const app = express();
 const multer = require('multer');
+const bcrypt = require('bcryptjs');
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const Car = require('../models/carModel');
 const User = require('../models/userModel');
+app.use(cookieParser());
+
 let loginUser;
 console.log(loginUser, 'from top');
 const storage = multer.diskStorage({
@@ -15,6 +22,31 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 const uploadImage = upload.single('image');
 
+// shared routes here
+async function shared(req) {
+    const user = req.user ? req.user[0] : null;
+    console.log(user);
+    let sidebarRoutes = [];
+
+    // Depending on the user's role, populate sidebarRoutes array
+    if (user && user.role === 'admin') {
+        sidebarRoutes = [
+            { path: '/', label: 'Home' },
+            { path: '/users', label: 'All Users' },
+            { path: '/products', label: 'All Cars' }
+            // Add more routes specific to admin here
+        ];
+    } else if (user && user.role === 'seller') {
+        sidebarRoutes = [
+            { path: '/', label: 'Home' },
+            { path: '/products', label: 'All Cars' }
+            // Add more routes specific to seller here
+        ];
+    }
+
+    return sidebarRoutes;
+}
+
 // !--------------Here is registrationuser------------
 async function registerUser(req, res) {
     try {
@@ -25,12 +57,14 @@ async function registerUser(req, res) {
             } else if (err) {
                 return res.status(500).json({ message: "Something went wrong" });
             }
+
             const { name, email, role, password } = req.body;
-            const image = req.file.filename;
-            const user = new User(
-                { name, email, role, password, image }
-            )
-            console.log(user);
+            const image = req?.file?.filename;
+
+            // Hash the password
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            const user = new User({ name, email, role, password: hashedPassword, image });
             const result = await user.save();
             res.render('login', { message: "Form submitted successfully", result });
         });
@@ -45,35 +79,20 @@ async function login(req, res) {
     try {
         const { email, password, role, name, } = req.body;
         console.log(email, password, role, name);
-        const user = await User.findOne({ email });
-        if (!user) {
+        const loginUser = await User.findOne({ email });
+        if (!loginUser) {
             return res.json({ message: 'email didn"t match' });
         }
-        console.log(user);
-        if (user) {
-            // const passwordMatch = await bcrypt.compare(password, user.password);
-            if (user.password !== password) {
-                return res.json({ message: 'password didn"t match' });
-            }
+        // Compare hashed password
+        const passwordMatch = await bcrypt.compare(password, loginUser.password);
+        if (!passwordMatch) {
+            return res.json({ message: 'Invalid password' });
         }
-        const cars = await getAllCarForDashboard();
-        loginUser = user;
-        res.render('home', { cars, loginUser });
+        const token = jwt.sign({ userId: loginUser._id, email: loginUser.email, role: loginUser.role }, 'gsT7jMFXvbUwDCYJqy4k3mVrHs82RyWn');
+        res.cookie('token_for_car', token, { httpOnly: true });
 
-        // const token = jwt.sign(user.email, 'dngfnjnxjmcxnxcn');
-        // res.cookie('token', token, {
-        //     httpOnly: true,
-        //     secure: false,
-        //     // secure: process.env.NODE_ENV === 'production',
-        //     // sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-        // }).json({
-        //     email: user.email,
-        //     token,
-        //     role: user.role,
-        //     login: true,
-        //     image: user?.image,
-        //     verifyEmail: user?.verifyEmail,
-        // })
+        res.redirect('/');
+
     } catch (error) {
         console.log(error);
     }
@@ -82,7 +101,6 @@ async function login(req, res) {
 // -------------------------------------update car(Aklima)--------------------
 async function updateCar(req, res) {
     try {
-        console.log(req.params.id);
         uploadImage(req, res, async function (err) {
             if (err instanceof multer.MulterError) {
                 return res.status(400).json({ error: "Something went wrong with file upload" });
@@ -110,7 +128,9 @@ async function updateCar(req, res) {
             }
             const updatedCar = await existingCar.save();
             const cars = await getAllCarForDashboard();
-            res.render('dashboard', { content: 'products', cars });
+            const sidebarRoutes = await shared(req);
+            const user = req.user ? req.user[0] : null;
+            res.render('dashboard', { content: 'products', cars, sidebarRoutes, user });
             // res.status(200).json({ message: 'Car sell post updated successfully', updatedCar });
         });
     } catch (error) {
@@ -145,7 +165,10 @@ async function createCar(req, res) {
                 description
             });
             const result = await newCar.save();
-            res.status(201).json({ message: 'Car sell post created successfully', result });
+            const cars = await getAllCarForDashboard();
+            const sidebarRoutes = await shared(req);
+            const user = req.user ? req.user[0] : null;
+            res.render('dashboard', { content: 'products', cars: cars, sidebarRoutes, user });
             return result;
         });
     } catch (error) {
@@ -156,8 +179,11 @@ async function createCar(req, res) {
 
 async function getAllCar(req, res) {
     try {
+        console.log('hit this route');
+        const user = req.user ? req.user[0] : null;
+        console.log(user, 'form this home route');
         const cars = await Car.find();
-        res.render("home", { cars, loginUser })
+        res.render("home", { cars, user })
     } catch (error) {
         res.json({ message: error.message });
     }
@@ -167,7 +193,9 @@ async function getAllCar(req, res) {
 async function getAllUsers(req, res) {
     try {
         const users = await User.find();
-        res.render('dashboard', { content: 'users', users });
+        const sidebarRoutes = await shared(req);
+        const user = req.user ? req.user[0] : null;
+        res.render('dashboard', { content: 'users', users, sidebarRoutes, user });
     } catch (error) {
         res.json({ message: error.message });
     }
@@ -193,7 +221,8 @@ async function details(req, res) {
     try {
         const id = req.params.id;
         const car = await getCarById(id);
-        res.render('details', { car });
+        const user = req.user ? req.user[0] : null;
+        res.render('details', { car, user });
     } catch (error) {
         console.log(error);
     }
@@ -203,8 +232,9 @@ async function updateSingleCar(req, res) {
     try {
         const id = req.params.id;
         const car = await getCarById(id);
-        console.log(car);
-        res.render('dashboard', { content: 'update-car', car });
+        const sidebarRoutes = await shared(req);
+        const user = req.user ? req.user[0] : null;
+        res.render('dashboard', { content: 'update-car', car, sidebarRoutes, user });
     } catch (error) {
         console.log(error);
     }
@@ -226,9 +256,59 @@ async function deleteCar(req, res) {
         console.log(carId);
         const car = await Car.deleteOne({ _id: carId });
         const cars = await getAllCarForDashboard();
-        res.render('dashboard', { content: 'products', cars });
+        const sidebarRoutes = await shared(req);
+        const user = req.user ? req.user[0] : null;
+        res.render('dashboard', { content: 'products', cars, sidebarRoutes, user });
     } catch (error) {
         console.log(error);
+    }
+}
+
+async function sorting(req, res) {
+    try {
+        const field = req.query.field;
+        let cars;
+        if (field === 'price') {
+            cars = await Car.find().sort({ price: 1 });
+        } else if (field === 'name') {
+            cars = await Car.find().sort({ carName: 1 });
+        } else if (field === 'createdAt') {
+            cars = await Car.find().sort({ createdAt: -1 });
+        } else {
+            cars = await Car.find();
+        }
+        const sidebarRoutes = await shared(req);
+        res.render('dashboard', { content: 'products', cars: cars, sidebarRoutes });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function searchCars(req, res) {
+    try {
+        const query = req.query.query;
+        const regex = new RegExp(query, 'i');
+        const cars = await Car.find({
+            $or: [
+                { carName: { $regex: regex } },
+                { model: { $regex: regex } },
+                { description: { $regex: regex } },
+                { availability: { $regex: regex } },
+                { color: { $regex: regex } },
+                { mileage: { $regex: regex } },
+                { transmission: { $regex: regex } },
+                { fuelType: { $regex: regex } },
+            ]
+        });
+
+        // console.log(cars);
+        // Render the search results or return them as JSON based on your application's needs
+        const sidebarRoutes = await shared(req);
+        res.render('dashboard', { content: 'products', cars: cars, sidebarRoutes });
+
+    } catch (error) {
+        console.error('Error searching cars:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 }
 
@@ -245,5 +325,7 @@ module.exports = {
     login,
     deleteCar,
     details,
-    getAllUsers
+    getAllUsers,
+    sorting,
+    searchCars,
 };

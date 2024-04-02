@@ -9,28 +9,28 @@
 </head>
 
 <body class="bg-gray-100">
-    <nav class="bg-gray-800 text-white p-4 flex justify-center items-center">
-        <a href="/" class="text-xl font-bold">Home</a>
-        <a href="/about" class="text-xl font-bold ml-4">About Us</a>
-        <a href="/contact" class="text-xl font-bold ml-4">Contact</a>
-    </nav>
 
-    <div class="container mx-auto py-8">
-        <div class="max-w-2xl mx-auto bg-white shadow rounded p-6">
-            <h1 class="text-3xl font-bold text-center mb-8">About Us</h1>
+    <%- include('navbar', { user: user }) -%>
 
-            <p class="text-lg mb-4">Welcome to Car Selling Website! We are passionate about helping individuals buy and
-                sell cars in a hassle-free and transparent manner.</p>
+        <div class="container mx-auto py-8">
+            <div class="max-w-2xl mx-auto bg-white shadow rounded p-6">
+                <h1 class="text-3xl font-bold text-center mb-8">About Us</h1>
 
-            <p class="text-lg mb-4">With years of experience in the automotive industry, our team is committed to
-                providing the best car buying and selling experience for our customers. Whether you're looking to
-                purchase your dream car or sell your current vehicle, we've got you covered.</p>
+                <p class="text-lg mb-4">Welcome to Car Selling Website! We are passionate about helping individuals buy
+                    and
+                    sell cars in a hassle-free and transparent manner.</p>
 
-            <p class="text-lg">Our mission is to connect buyers and sellers, making the car buying and selling process
-                easy, efficient, and enjoyable for everyone involved. We strive to provide exceptional customer service
-                and support throughout the entire journey.</p>
+                <p class="text-lg mb-4">With years of experience in the automotive industry, our team is committed to
+                    providing the best car buying and selling experience for our customers. Whether you're looking to
+                    purchase your dream car or sell your current vehicle, we've got you covered.</p>
+
+                <p class="text-lg">Our mission is to connect buyers and sellers, making the car buying and selling
+                    process
+                    easy, efficient, and enjoyable for everyone involved. We strive to provide exceptional customer
+                    service
+                    and support throughout the entire journey.</p>
+            </div>
         </div>
-    </div>
 </body>
 
 </html>

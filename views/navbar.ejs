@@ -1,0 +1,18 @@
+<nav class="bg-gray-800 text-white py-8 flex justify-between items-center px-10">
+    <div class="flex items-center space-x-4">
+        <a href="/" class="text-xl font-bold">Ca<span class="text-red-500">r Ba</span>zar</a>
+        <a href="/" class="text-xl font-bold">Home</a>
+        <a href="/about" class="text-xl font-bold">About Us</a>
+    </div>
+    <% if (user) { %>
+        <div class="flex items-center">
+            <a href="/logout" class="underline text-xl font-bold">Logout</a>
+            <a href="/home" class="text-xl font-bold ml-4">Dashboard</a>
+            <div class="ml-4 flex items-center">
+                <span class="text-xl font-bold mr-2">
+                    <%= user.email %>
+                </span>
+            </div>
+        </div>
+        <% } %>
+</nav>
