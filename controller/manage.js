@@ -109,7 +109,9 @@ async function updateCar(req, res) {
                 existingCar.image = req.file.filename;
             }
             const updatedCar = await existingCar.save();
-            res.status(200).json({ message: 'Car sell post updated successfully', updatedCar });
+            const cars = await getAllCarForDashboard();
+            res.render('dashboard', { content: 'products', cars });
+            // res.status(200).json({ message: 'Car sell post updated successfully', updatedCar });
         });
     } catch (error) {
         console.error('Error updating car sell post:', error);
