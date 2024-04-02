@@ -134,9 +134,11 @@
 
                     <!-- users routes -->
                     <% } else if (content==='users' ) { %>
-                        <h2>Users</h2>
                         <!-- Render users component -->
-                        <p>This is the Users component</p>
+                        <div class="p-2">
+                            <%- include('users', { users: users }) -%>
+                        </div>
+                        
                         <% } else if (content==='products' ) { %>
                             <div class="p-2">
                                 <%- include('dasAllCars', { cars: cars }) -%>

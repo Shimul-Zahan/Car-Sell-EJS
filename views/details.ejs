@@ -10,39 +10,56 @@
 
 <body class="bg-gray-900 container mx-auto py-10">
     <div class="flex justify-center items-center">
-        <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            alt="" style="height: 500px;" />
+        <img src="/uploads/<%= car.image %>"
+            alt="<%= car.carName %>" style="height: 500px;" />
     </div>
 
     <div class="flow-root rounded-lg border border-gray-100 py-3 shadow-sm">
         <dl class="-my-3 divide-y divide-gray-100 text-sm">
             <div class="grid grid-cols-1 gap-1 p-3 even:bg-gray-50 sm:grid-cols-3 sm:gap-4">
-                <dt class="font-medium text-white">Title</dt>
-                <dd class="text-white sm:col-span-2">Mr</dd>
+                <dt class="font-medium text-white">Car Name</dt>
+                <dd class="text-white sm:col-span-2"><%= car.carName %></dd>
             </div>
 
             <div class="grid grid-cols-1 gap-1 p-3 even:bg-gray-50 sm:grid-cols-3 sm:gap-4">
-                <dt class="font-medium text-white">Name</dt>
-                <dd class="text-white sm:col-span-2">John Frusciante</dd>
+                <dt class="font-medium text-white">Model</dt>
+                <dd class="text-white sm:col-span-2"><%= car.model %></dd>
             </div>
 
             <div class="grid grid-cols-1 gap-1 p-3 even:bg-gray-50 sm:grid-cols-3 sm:gap-4">
-                <dt class="font-medium text-white">Occupation</dt>
-                <dd class="text-white sm:col-span-2">Guitarist</dd>
+                <dt class="font-medium text-white">Price</dt>
+                <dd class="text-white sm:col-span-2">$<%= car.price.toLocaleString() %></dd>
+            </div>
+            <div class="grid grid-cols-1 gap-1 p-3 even:bg-gray-50 sm:grid-cols-3 sm:gap-4">
+                <dt class="font-medium text-white">Description</dt>
+                <dd class="text-white sm:col-span-2"><%= car.description %></dd>
+            </div>
+            <div class="grid grid-cols-1 gap-1 p-3 even:bg-gray-50 sm:grid-cols-3 sm:gap-4">
+                <dt class="font-medium text-white">Created At</dt>
+                <dd class="text-white sm:col-span-2"><%= new Date(car.createdAt).toLocaleDateString() %></dd>
+            </div>
+            <div class="grid grid-cols-1 gap-1 p-3 even:bg-gray-50 sm:grid-cols-3 sm:gap-4">
+                <dt class="font-medium text-white">Availability</dt>
+                <dd class="text-white sm:col-span-2"><%= car.availability %></dd>
+            </div>
+            <div class="grid grid-cols-1 gap-1 p-3 even:bg-gray-50 sm:grid-cols-3 sm:gap-4">
+                <dt class="font-medium text-white">Color</dt>
+                <dd class="text-white sm:col-span-2"><%= car.color %></dd>
             </div>
 
             <div class="grid grid-cols-1 gap-1 p-3 even:bg-gray-50 sm:grid-cols-3 sm:gap-4">
-                <dt class="font-medium text-white">Salary</dt>
-                <dd class="text-white sm:col-span-2">$1,000,000+</dd>
+                <dt class="font-medium text-white">Mileage</dt>
+                <dd class="text-white sm:col-span-2"><%= car.mileage %> miles</dd>
             </div>
 
             <div class="grid grid-cols-1 gap-1 p-3 even:bg-gray-50 sm:grid-cols-3 sm:gap-4">
-                <dt class="font-medium text-white">Bio</dt>
-                <dd class="text-white sm:col-span-2">
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Et facilis debitis explicabo
-                    doloremque impedit nesciunt dolorem facere, dolor quasi veritatis quia fugit aperiam
-                    aspernatur neque molestiae labore aliquam soluta architecto?
-                </dd>
+                <dt class="font-medium text-white">Transmission</dt>
+                <dd class="text-white sm:col-span-2"><%= car.transmission %></dd>
+            </div>
+
+            <div class="grid grid-cols-1 gap-1 p-3 even:bg-gray-50 sm:grid-cols-3 sm:gap-4">
+                <dt class="font-medium text-white">Fuel Type</dt>
+                <dd class="text-white sm:col-span-2"><%= car.fuelType %></dd>
             </div>
         </dl>
     </div>

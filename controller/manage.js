@@ -163,6 +163,17 @@ async function getAllCar(req, res) {
     }
 }
 
+
+async function getAllUsers(req, res) {
+    try {
+        const users = await User.find();
+        res.render('dashboard', { content: 'users', users });
+    } catch (error) {
+        res.json({ message: error.message });
+    }
+}
+
+
 //----------------getCarById/:id-------------------------
 async function getCarById(id) {
     try {
@@ -234,4 +245,5 @@ module.exports = {
     login,
     deleteCar,
     details,
+    getAllUsers
 };

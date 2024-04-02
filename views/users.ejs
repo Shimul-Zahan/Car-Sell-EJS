@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="flex justify-between items-center">
+        <div>
+            <h2>Users</h2>
+            <p>This is the Users component</p>
+        </div>
+        <div class="lg:pr-10">
+            <a href="/"
+                class="inline-blockrounded px-8 bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700">
+                all Users
+            </a>
+        </div>
+    </div>
+    <div class="overflow-x-scroll">
+        <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm overflow-x-scroll">
+            <thead class="ltr:text-left rtl:text-right text-left">
+                <tr>
+                    <th class="whitespace-nowrap px-4 py-2 font-bold text-gray-900">Image</th>
+                    <th class="whitespace-nowrap px-4 py-2 font-bold text-gray-900">Name</th>
+                    <th class="whitespace-nowrap px-4 py-2 font-bold text-gray-900">Email</th>
+                    <th class="whitespace-nowrap px-4 py-2 font-bold text-gray-900">Action</th>
+                </tr>
+            </thead>
+
+            <tbody class="divide-y divide-gray-200">
+                <% users.forEach(user=> { %>
+                    <tr>
+                        <td class="whitespace-nowrap px-4 py-2"><img src="/uploads/<%= user.image %>"
+                                alt="<%=user.name %>" style="height: 30px; width: 50%;"></td>
+                        <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                            <%= user.name %>
+                        </td>
+                        <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                            <%= user.email %>
+                        </td>
+                        <td class="flex gap-4">
+                            <a href="/updateCar/<%=user.id%>"
+                                class="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700">
+                                Edit
+                            </a>
+                            <a href="/delete-item/<%= user.id %>"
+                                class="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700 delete-button">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                    <% }) %>
+
+            </tbody>
+        </table>
+    </div>
+
+
+
+</body>
+
+</html>

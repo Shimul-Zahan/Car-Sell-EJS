@@ -2,9 +2,10 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 const connecting = () => {
-    const uri = `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASS}@cluster0.waps95s.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+    const uri = `mongodb+srv://quizeDB:W4VOxlogfo3vpsbD@cluster0.waps95s.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
     return uri;
 }
+
 
 const connectDB = async () => {
     console.log('testing.....');
