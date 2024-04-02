@@ -278,7 +278,8 @@ async function sorting(req, res) {
             cars = await Car.find();
         }
         const sidebarRoutes = await shared(req);
-        res.render('dashboard', { content: 'products', cars: cars, sidebarRoutes });
+        const user = req.user ? req.user[0] : null;
+        res.render('dashboard', { content: 'products', cars: cars, sidebarRoutes, user });
     } catch (error) {
         console.log(error);
     }
@@ -304,7 +305,8 @@ async function searchCars(req, res) {
         // console.log(cars);
         // Render the search results or return them as JSON based on your application's needs
         const sidebarRoutes = await shared(req);
-        res.render('dashboard', { content: 'products', cars: cars, sidebarRoutes });
+        const user = req.user ? req.user[0] : null;
+        res.render('dashboard', { content: 'products', cars: cars, sidebarRoutes, user });
 
     } catch (error) {
         console.error('Error searching cars:', error);
